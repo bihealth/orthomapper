@@ -15,7 +15,8 @@
 #' @importFrom utils read.table
 #' @examples
 #' \dontrun{
-#' 
+#' download.file("https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene_orthologs.gz")
+#' orthologyDBFromFile("gene_orthologs.gz", "orthologsDB.sqlite", info=list(date=Sys.Date()))
 #' }
 #' @export
 orthologyDBFromFile <- function(input_file, output_file, fields=c(1,2,4,5), info=NULL) {
