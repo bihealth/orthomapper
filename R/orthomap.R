@@ -180,7 +180,7 @@ orthomap <- function(genes, taxon1, taxon2) {
 }
 
 .loaddbi <- function(orgdb) {
-  if(!require(orgdb, character.only=TRUE)) {
+  if(!require(orgdb, character.only=TRUE, quietly=TRUE)) {
     stop(sprintf("Cannot load package %s, is it installed?", orgdb))
   }
 
