@@ -28,7 +28,7 @@ working on. Some of the more popular Taxonomy IDs are given below in Table
 
 **Table 1.** Species for which organism annotation is available.
 
-```{r, echo=FALSE,result="markdown"}
+```{r}
 pander(dbifiles[ order(dbifiles$species), ])
 ```
 
