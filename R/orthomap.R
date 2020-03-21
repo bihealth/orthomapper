@@ -25,6 +25,8 @@ con <- NULL
 #' Return a taxon for each of the genes
 #' @param genes numeric vector of Entrez gene IDs
 #' @return a data frame with two columns
+#' @examples
+#' find_taxon(c(115362, 229898))
 #' @export
 find_taxon <- function(genes) {
 
@@ -167,13 +169,16 @@ orthologs_all <- function(gene) {
 #' @param taxon1 source taxon ID
 #' @param taxon2 target taxon ID
 #' @return A data frame with two columns
-
+#' @examples
+#' orthomap(c(229898, 52024), 10090, 9606)
+#' @export
 orthomap <- function(genes, taxon1, taxon2) {
 
 	map <- orthologs(taxon1, taxon2)
 	match <- match(genes, map[,1])
-
-  return(data.frame(Source=genes, Target=map[match,2]))
+  ret <- data.frame(genes, map[match,2])
+  colnames(ret) <- c(sprintf("T.%d", taxon1), sprintf("T.%d", taxon2))
+  return(ret)
 }
 
 
@@ -206,6 +211,12 @@ orthomap <- function(genes, taxon1, taxon2) {
 #' @param orgdb name of the annotation package; inferred automatically for
 #'              species present in the output of the `speciesDBITable()` function.
 #' @return a data frame with `length(column)+1` columns; first column is the entrez ID
+#' @examples
+#' ## get the SYMBOL for gene 52024, infer taxon automatically
+#' entrez_annotate(52024)
+#' 
+#' ## get more information on the gene ID 52024
+#' entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
 #' @export
 entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", orgdb=NULL) {
 
@@ -247,6 +258,9 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", orgdb=NULL) {
 #'              species present in the output of the `speciesDBITable()` function.
 #' @param taxon a single value for a taxon
 #' @return a data frame with 2 columns; first column is the entrez ID, the second the symbol, third the gene name.
+#' @examples
+#' ## find a gene symbol by similarity search
+#' similar_symbol("GBP5", 10090)
 #' @export
 similar_symbol <- function(x, taxon, orgdb=NULL) {
 

@@ -19,3 +19,8 @@ A data frame with two columns
 \description{
 All ortholog pairs between two taxons
 }
+\examples{
+\dontrun{
+mouserat <- orthologs(10090, 10116)
+}
+}

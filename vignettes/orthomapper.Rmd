@@ -42,6 +42,14 @@ colnames(mouserat)
 head(mouserat)
 ```
 
+We can also specify a vector with gene IDs and ask for specific orthologs
+to that genes:
+
+```{r}
+## map Gbp5 and Ankrd22 from mouse to human 
+orthomap(c(229898, 52024), 10090, 9606)
+```
+
 As you can see, the orthomapper DB is based on Entrez gene IDs. 
 Fortunately, orthomapper makes translating the Entrez IDs relatively
 painless. In the table above, you will see that for several species,

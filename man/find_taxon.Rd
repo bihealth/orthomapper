@@ -15,3 +15,6 @@ a data frame with two columns
 \description{
 Return a taxon for each of the genes
 }
+\examples{
+find_taxon(c(115362, 229898))
+}

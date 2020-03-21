@@ -23,3 +23,10 @@ a data frame with `length(column)+1` columns; first column is the entrez ID
 \description{
 Return annotation information for given Entrez IDs
 }
+\examples{
+## get the SYMBOL for gene 52024, infer taxon automatically
+entrez_annotate(52024)
+
+## get more information on the gene ID 52024
+entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
+}

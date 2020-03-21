@@ -19,3 +19,6 @@ A data frame with two columns
 \description{
 Map a set of gene IDs to orthologs from another taxon
 }
+\examples{
+orthomap(c(229898, 52024), 10090, 9606)
+}

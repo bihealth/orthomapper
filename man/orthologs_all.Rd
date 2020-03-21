@@ -16,3 +16,8 @@ list with each element corresponding to one gene from the `gene`
 \description{
 Find all orthologs across all species to a given gene
 }
+\examples{
+\dontrun{
+orthologs_all(52024)
+}
+}

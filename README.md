@@ -28,6 +28,12 @@ entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
 
 ## get all orthologs of the gene ID 52024
 ankrd22.o <- orthologs_all(52024)
+
+## map a list of genes to orthologs from another taxon
+orthomap(c(229898, 52024), 10090, 9606)
+
+## find a gene symbol by similarity search
+similar_symbol("GBP5", 10090)
 ```
 
 For more information, refer to the package vignette:

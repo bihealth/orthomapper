@@ -22,3 +22,7 @@ Search for symbols similar to a given string
 Basically, uppercase the requested symbol, remove all digits at the end
 and see whether anything matches.
 }
+\examples{
+## find a gene symbol by similarity search
+similar_symbol("GBP5", 10090)
+}
