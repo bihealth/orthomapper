@@ -41,6 +41,10 @@ find_taxon <- function(genes) {
 #' @param taxon2 target taxon ID
 #' @return A data frame with two columns
 #' @import DBI
+#' @examples
+#' \dontrun{
+#' mouserat <- orthologs(10090, 10116)
+#'}
 #' @export
 orthologs <- function(taxon1, taxon2) {
 
@@ -143,6 +147,10 @@ orthologs <- function(taxon1, taxon2) {
 #' @param gene a vector of gene IDs
 #' @return list with each element corresponding to one gene from the `gene`
 #'         vector. Each element is a data frame with a taxon ID and gene ID column.
+#' @examples
+#' \dontrun{
+#' orthologs_all(52024)
+#'}
 #' @export
 orthologs_all <- function(gene) {
   

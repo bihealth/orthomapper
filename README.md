@@ -30,4 +30,8 @@ entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
 ankrd22.o <- orthologs_all(52024)
 ```
 
-For more information, refer to the package vignette.
+For more information, refer to the package vignette:
+
+``` r
+vignette("orthomapper")
+```
