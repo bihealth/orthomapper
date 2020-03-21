@@ -28,8 +28,9 @@ working on. Some of the more popular Taxonomy IDs are given below in Table
 
 **Table 1.** Species for which organism annotation is available.
 
-```{r}
-pander(dbifiles[ order(dbifiles$species), ])
+```{r,results="asis",echo=FALSE}
+.dbi <- speciesDBITable()
+pandoc.table(.dbi[ order(.dbi$species), ], justify="left")
 ```
 
 To get all orthologous gene pairs from two taxons (termed "source" and
