@@ -1,0 +1,90 @@
+---
+title: "Finding orthologous genes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Finding orthologous genes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(pander)
+```
+
+```{r setup}
+library(orthomapper)
+```
+
+# Basic usage
+
+To use orthomapper, you need to know the Taxonomy IDs (from
+[NCBI](https://www.ncbi.nlm.nih.gov/taxonomy)) of the species you are
+working on. Some of the more popular Taxonomy IDs are given below in Table
+1.
+
+**Table 1.** Species for which organism annotation is available.
+
+```{r, echo=FALSE,result="markdown"}
+pander(dbifiles[ order(dbifiles$species), ])
+```
+
+To get all orthologous gene pairs from two taxons (termed "source" and
+"target"), you simply can run the following function:
+
+```{r}
+mouserat <- orthologs(10090, 10116)
+dim(mouserat)
+colnames(mouserat)
+head(mouserat)
+```
+
+As you can see, the orthomapper DB is based on Entrez gene IDs. 
+Fortunately, orthomapper makes translating the Entrez IDs relatively
+painless. In the table above, you will see that for several species,
+orthomapper is aware which annotation package should be used. If asked to
+do so, it attempts to load the respective package and return the requested
+columns such as "SYMBOL" or "GENENAME":
+
+```{r}
+# infer taxon automatically
+entrez_annotate(52024)
+
+# specify taxon and columns
+entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
+```
+
+If you do not specify the taxon, orthomapper uses the function
+`find_taxon()` to query the orthology database about the taxon
+corresponding to the gene ID. It will fail if the first gene of the genes
+argument is not in the database.
+
+To get all orthologs of the gene 52024 (Ankrd22), run:
+
+```{r}
+ankrd22.o <- orthologs_all(52024)
+head(ankrd22.o)[[1]]
+```
+
+`orthologs_all` returns a list, since you can submit more than one gene at
+once.
+
+# Gory details
+
+The package `orthomapper` is based on a file containing information about
+orthologous genes distributed by NCBI, `gene_orthologs.gz` downloaded from
+[https://ftp.ncbi.nlm.nih.gov/gene/DATA/](https://ftp.ncbi.nlm.nih.gov/gene/DATA/). 
+This file has been converted into SQLite database. Note that the file does
+not contain all ortholog pairs; rather, it contains ortholog pairs linking
+to "hub" species (such as humans), so in order to find all orthologs
+between two species you need to first identify all orthologs between these
+species and a hub species, and then match the respective pairs.
+
+For example, a mouse gene M1 might be orthologous to a rat gene R1, but
+this information is not contained directly in the ortholog database.
+Rather, R1 and M1 both link to a human gene H1, so the relationship between
+R1 and M1 must be inferred from the relationships R1-H1-M1. This is the
+point of the `orthomapper` package.

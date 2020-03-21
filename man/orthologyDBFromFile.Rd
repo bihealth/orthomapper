@@ -4,8 +4,12 @@
 \alias{orthologyDBFromFile}
 \title{Create orthology database from flat file}
 \usage{
-orthologyDBFromFile(input_file, output_file, fields = c(1, 2, 4, 5),
-  info = NULL)
+orthologyDBFromFile(
+  input_file,
+  output_file,
+  fields = c(1, 2, 4, 5),
+  info = NULL
+)
 }
 \arguments{
 \item{input_file}{Path to input file (flat text or gzipped)}

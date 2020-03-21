@@ -9,3 +9,8 @@ speciesDBITable()
 \description{
 Return the species DBI table
 }
+\details{
+This file contains information about annotationDBI org.*db files of
+which orthomapper is aware. For the taxon IDs in this database, the
+respective org.*db will be loaded automatically if necessary.
+}
