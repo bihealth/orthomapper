@@ -1,10 +1,11 @@
 Package: orthomapper
 Title: Map Ortholog Genes
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Author: January Weiner [aut, cre]
+Maintainer: January Weiner <january.weiner@gmail.com>
 Description: Maps orthologous genes using internally stored ortholog
              database and AnnotationDBI packages.
-Depends: R (>= 3.0.0)
+Depends: R (>= 3.0.0),DBI,RSQLite
 License: GPL
 Encoding: UTF-8
 LazyData: true
@@ -12,6 +13,10 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    pander
+    pander,
+    AnnotationDbi,
+    org.Mm.eg.db,
+    org.Rn.eg.db,
+    org.Hs.eg.db
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr

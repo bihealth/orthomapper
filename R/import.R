@@ -12,6 +12,7 @@
 #' @param fields Columns in input_file corresponding to source taxon ID, source gene ID, target taxon ID and target gene ID
 #' @param info named list holding additional information (comment) which should be stored in the database
 #' @import DBI RSQLite
+#' @importFrom utils read.table
 #' @examples
 #' \dontrun{
 #' 

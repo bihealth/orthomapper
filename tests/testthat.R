@@ -1,4 +1,4 @@
 library(testthat)
-library(orthomaper)
+library(orthomapper)
 
-test_check("orthomaper")
+test_check("orthomapper")

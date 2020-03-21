@@ -42,7 +42,7 @@ find_taxon <- function(genes) {
 #' @param taxon1 source taxon ID
 #' @param taxon2 target taxon ID
 #' @return A data frame with two columns
-#' @import DBI
+#' @import DBI RSQLite
 #' @examples
 #' \dontrun{
 #' mouserat <- orthologs(10090, 10116)
@@ -78,47 +78,6 @@ orthologs <- function(taxon1, taxon2) {
 }
 
 
-## below is the old implementation not using self join. Slightly faster,
-## but less elegant.
-
-#' All ortholog pairs between two taxons
-#'
-#' All ortholog pairs between two taxons
-#' @param ids entrez gene IDs from taxon1
-#' @param taxon1 source taxon ID
-#' @param taxon2 target taxon ID
-#' @return A data frame with two columns
-#' @import DBI
-.orthologs <- function(taxon1, taxon2) {
-  
-  fmt <- "SELECT GeneID1, GeneID2 FROM orthologs WHERE (TaxID1 == %s AND TaxID2 == %s)"
-  query <- sprintf(fmt, taxon1, taxon2)
-  map <- DBI::dbGetQuery(con, query)
-  colnames(map) <- c("Source", "Target")
-
-  fmt <- "SELECT GeneID2, GeneID1 FROM orthologs WHERE (TaxID2 == %s AND TaxID1 == %s)"
-  query <- sprintf(fmt, taxon1, taxon2)
-  map2 <- DBI::dbGetQuery(con, query)
-  colnames(map2) <- c("Source", "Target")
-  map <- rbind(map, map2)
-
-  ## now we need to find links which go over species in the left column
-
-  fmt <- "SELECT GeneID1, GeneID2 FROM orthologs WHERE TaxID2 == %s"
-  query <- sprintf(fmt, taxon1)
-  tax1 <- DBI::dbGetQuery(con, query)
-  query <- sprintf(fmt, taxon2)
-  tax2 <- DBI::dbGetQuery(con, query)
-  
-  common <- intersect(tax1[,1], tax2[,1])
-
-  map3 <- data.frame(Source=tax1[ match(common, tax1[,1]), 2], 
-                     Target=tax2[ match(common, tax2[,1]), 2])
-
-  map <- rbind(map, map3)
-
-  return(map)
-}
 
 .find_one_ortholog <- function(gene) {
 
@@ -142,6 +101,8 @@ orthologs <- function(taxon1, taxon2) {
 
   return(rbind(map, map2))
 }
+
+
 
 #' Find all orthologs to a gene 
 #'
@@ -211,12 +172,15 @@ orthomap <- function(genes, taxon1, taxon2) {
 #' @param orgdb name of the annotation package; inferred automatically for
 #'              species present in the output of the `speciesDBITable()` function.
 #' @return a data frame with `length(column)+1` columns; first column is the entrez ID
+#' @importFrom AnnotationDbi columns mapIds
 #' @examples
+#' \dontrun{
 #' ## get the SYMBOL for gene 52024, infer taxon automatically
 #' entrez_annotate(52024)
 #' 
 #' ## get more information on the gene ID 52024
 #' entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
+#' }
 #' @export
 entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", orgdb=NULL) {
 
@@ -258,6 +222,7 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", orgdb=NULL) {
 #'              species present in the output of the `speciesDBITable()` function.
 #' @param taxon a single value for a taxon
 #' @return a data frame with 2 columns; first column is the entrez ID, the second the symbol, third the gene name.
+#' @importFrom AnnotationDbi select keys
 #' @examples
 #' ## find a gene symbol by similarity search
 #' similar_symbol("GBP5", 10090)
