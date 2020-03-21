@@ -32,6 +32,7 @@ the NCBI gene FTP site, https://ftp.ncbi.nlm.nih.gov/gene/DATA/.
 }
 \examples{
 \dontrun{
-
+download.file("https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene_orthologs.gz")
+orthologyDBFromFile("gene_orthologs.gz", "orthologsDB.sqlite", info=list(date=Sys.Date()))
 }
 }
