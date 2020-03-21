@@ -24,10 +24,11 @@
 #' @param genes a numeric vector of Entrez gene IDs
 #' @param taxon a single value for a taxon. If NULL, orthomapper will
 #'              attempt to identify the taxon (it is much faster if you specify it)
+#' @param keytype which key to use to access the DB; default ENTREZID
 #' @param column a character vector with the columns requested from the annotation database
 #' @param orgdb name of the annotation package; inferred automatically for
 #'              species present in the output of the `speciesDBITable()` function.
-#' @return a data frame with `length(column)+1` columns; first column is the entrez ID
+#' @return a data frame with `length(column)+1` columns; first column is the entrez ID (or keytype)
 #' @importFrom AnnotationDbi columns mapIds
 #' @examples
 #' \dontrun{
@@ -38,10 +39,15 @@
 #' entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
 #' }
 #' @export
-entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", orgdb=NULL) {
+entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", keytype="ENTREZID", orgdb=NULL) {
 
-  if(is.null(taxon)) 
+  if(is.null(taxon)) {
+    if(keytype != "ENTREZID") {
+      stop("Taxon can be guessed only from ENTREZID, either use entrez IDs or provide taxon")
+    }
+
     taxon <- find_taxon(genes[1])[1,2]
+  }
 
   if(is.null(taxon) || is.na(taxon))
     stop("Cannot identify taxon!")
@@ -58,7 +64,7 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", orgdb=NULL) {
 
   genes2 <- as.character(genes)
   ret <- lapply(column, function(cc) {
-    mapIds(dbi, genes2, column=cc, keytype="ENTREZID", multiVals="first")
+    mapIds(dbi, genes2, column=cc, keytype=keytype, multiVals="first")
   })
   ret <- Reduce(cbind, ret)
 
