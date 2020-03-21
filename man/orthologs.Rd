@@ -10,8 +10,6 @@ orthologs(taxon1, taxon2)
 \item{taxon1}{source taxon ID}
 
 \item{taxon2}{target taxon ID}
-
-\item{ids}{entrez gene IDs from taxon1}
 }
 \value{
 A data frame with two columns

@@ -7,6 +7,8 @@
 similar_symbol(x, taxon, orgdb = NULL)
 }
 \arguments{
+\item{x}{a single string (symbol to match)}
+
 \item{taxon}{a single value for a taxon}
 
 \item{orgdb}{name of the annotation package; inferred automatically for

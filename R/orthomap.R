@@ -38,7 +38,6 @@ find_taxon <- function(genes) {
 #' All ortholog pairs between two taxons
 #'
 #' All ortholog pairs between two taxons
-#' @param ids entrez gene IDs from taxon1
 #' @param taxon1 source taxon ID
 #' @param taxon2 target taxon ID
 #' @return A data frame with two columns
@@ -218,6 +217,7 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", orgdb=NULL) {
 #'
 #' Basically, uppercase the requested symbol, remove all digits at the end
 #' and see whether anything matches.
+#' @param x a single string (symbol to match)
 #' @param orgdb name of the annotation package; inferred automatically for
 #'              species present in the output of the `speciesDBITable()` function.
 #' @param taxon a single value for a taxon

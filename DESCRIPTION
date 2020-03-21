@@ -5,16 +5,19 @@ Author: January Weiner [aut, cre]
 Maintainer: January Weiner <january.weiner@gmail.com>
 Description: Maps orthologous genes using internally stored ortholog
              database and AnnotationDBI packages.
-Depends: R (>= 3.0.0),DBI,RSQLite
+Depends: R (>= 3.0.0)
 License: GPL
 Encoding: UTF-8
 LazyData: true
+Imports:
+    AnnotationDbi,
+    DBI,
+    RSQLite
 Suggests: 
     testthat,
     knitr,
     rmarkdown,
     pander,
-    AnnotationDbi,
     org.Mm.eg.db,
     org.Rn.eg.db,
     org.Hs.eg.db
