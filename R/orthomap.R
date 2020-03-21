@@ -20,8 +20,12 @@ con <- NULL
 #' @export
 use_orthoDB <- function(file) {
 
+	if(!file.exists(file)) 
+		stop(sprintf("The file %s does not exist", file))
+
 	DBI::dbDisconnect(con)
 	con <<- DBI::dbConnect(RSQLite::SQLite(), dbname=file)
+	message(sprintf("Switched to database %s", file))
 	invisible(con)
 }
 
