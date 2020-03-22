@@ -243,7 +243,7 @@ point of the `orthomapper` package.
 The Orthomapper database resides in `extdata/orthologDB.sqlite`. You can
 find this file in the R installation with
 
-```{r}
+```{r, eval=FALSE}
 system.file("extdata", "orthologDB.sqlite", package="orthomapper")
 ```
 
