@@ -1,5 +1,5 @@
 ---
-title: "Finding orthologous genes"
+title: "![](orthomapper-icon.png) Orthomapper: Mapping Orthologs"
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -19,7 +19,6 @@ library(orthomapper)
 library(org.Hs.eg.db)
 library(org.Mm.eg.db)
 ```
-
 
 # Basic usage
 

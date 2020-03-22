@@ -4,11 +4,13 @@
 \alias{species_info}
 \title{Retrieve species info}
 \usage{
-species_info(taxonID = NULL)
+species_info(taxonID = NULL, show.lineage = FALSE)
 }
 \arguments{
 \item{taxonID}{numeric vector of taxonomy IDs. If NULL, retrieve all species. Otherwise, find the
 species selected}
+
+\item{show.lineage}{if TRUE, show also the lineage column (not often needed)}
 }
 \description{
 Retrieve species info either for all species in the orthology database

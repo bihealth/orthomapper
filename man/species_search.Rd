@@ -7,7 +7,8 @@
 species_search(
   pattern,
   columns = c("name", "common_names", "lineage"),
-  ignore.case = TRUE
+  ignore.case = TRUE,
+  show.lineage = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ species_search(
 \item{columns}{columns from the species table to search through}
 
 \item{ignore.case}{if TRUE (default) do a case-insensitive search}
+
+\item{show.lineage}{if TRUE, show also the lineage column (not often needed)}
 }
 \description{
 Find all species matching a pattern

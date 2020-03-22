@@ -2,6 +2,7 @@
 
 export(entrez_annotate)
 export(find_taxon)
+export(orthodb_showmeta)
 export(orthologs)
 export(orthologs_all)
 export(orthologyDBFromFile)
