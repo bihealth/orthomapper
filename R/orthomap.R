@@ -60,17 +60,26 @@ find_taxon <- function(genes) {
 
 #' All ortholog pairs between two taxons
 #'
-#' All ortholog pairs between two taxons
-#' @param taxon1 source taxon ID
-#' @param taxon2 target taxon ID
+#' All ortholog pairs between two taxons. 
+#'
+#' Instead of numeric taxon IDs, a string
+#' can be used, in which case orthomapper will attempt to identify the taxon ID automatically.
+#' This will work reliably for full scientific names or monikers in the internal 
+#' database of annotations (see the output of [speciesDBITable()]).
+#' @param taxon1 source taxon ID or a name
+#' @param taxon2 target taxon ID or a name
 #' @return A data frame with two columns
 #' @import DBI RSQLite
 #' @examples
 #' \dontrun{
 #' mouserat <- orthologs(10090, 10116)
+#' mouserat <- orthologs("Mm", "Rn")
 #'}
 #' @export
 orthologs <- function(taxon1, taxon2) {
+
+	if(!is.numeric(taxon1)) taxon1 <- .get_taxon(taxon1)
+	if(!is.numeric(taxon2)) taxon2 <- .get_taxon(taxon2)
 
   cnames <- c(sprintf("T.%d", taxon1), sprintf("T.%d", taxon2))
   
@@ -148,6 +157,11 @@ orthologs_all <- function(gene) {
 #' Map a set of gene IDs to orthologs from another taxon
 #'
 #' Map a set of gene IDs to orthologs from another taxon
+#'
+#' Instead of numeric taxon IDs, a string
+#' can be used, in which case orthomapper will attempt to identify the taxon ID automatically.
+#' This will work reliably for full scientific names or monikers in the internal 
+#' database of annotations (see the output of [speciesDBITable()]).
 #' @param genes a vector with entrez IDs of genes
 #' @param taxon1 source taxon ID
 #' @param taxon2 target taxon ID
@@ -156,6 +170,9 @@ orthologs_all <- function(gene) {
 #' orthomap(c(229898, 52024), 10090, 9606)
 #' @export
 orthomap <- function(genes, taxon1, taxon2) {
+
+	if(!is.numeric(taxon1)) taxon1 <- .get_taxon(taxon1)
+	if(!is.numeric(taxon2)) taxon2 <- .get_taxon(taxon2)
 
 	map <- orthologs(taxon1, taxon2)
 	match <- match(genes, map[,1])

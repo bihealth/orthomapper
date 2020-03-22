@@ -1,7 +1,7 @@
 # Orthomaper
 
 Orthomapper uses an NCBI database of orthologs to retrieve orthologs
-between two taxons. 
+between two bilaterian taxons. 
 
 # Installation
 

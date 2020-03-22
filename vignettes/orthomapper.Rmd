@@ -29,17 +29,20 @@ library(orthomapper)
 ## get all orthologs between mouse and rat
 mouserat <- orthologs(10090, 10116)
 
-## get the SYMBOL for gene 52024, infer taxon automatically
-entrez_annotate(52024)
-
-## get more information on the gene ID 52024
-entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
+## instead of taxon ID, a moniker or full species name
+mouserat <- orthologs("Mm", "Rattus norvegicus")
 
 ## get all orthologs of the gene ID 52024
 ankrd22.o <- orthologs_all(52024)
 
 ## map a list of genes to orthologs from another taxon
 orthomap(c(229898, 52024), 10090, 9606)
+
+## get the SYMBOL for gene 52024, infer taxon automatically
+entrez_annotate(52024)
+
+## get more information on the gene ID 52024
+entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
 
 ## find a gene symbol by similarity search
 similar_symbol("GBP5", 10090)
@@ -78,6 +81,16 @@ to that genes:
 ```{r}
 ## map Gbp5 and Ankrd22 from mouse to human 
 orthomap(c(229898, 52024), 10090, 9606)
+```
+
+Instead of using the NCBI taxon identifiers, you can also use a moniker
+(such as "Hs" or "Rn") or a species name (e.g. "Homo sapiens"). This works
+for both `orthomap` and `orthologs`: 
+
+```{r}
+mouserat <- orthologs("Mm", "Rattus norvegicus")
+
+orthomap(c(229898, 52024), "Mm", "Hs")
 ```
 
 To get all orthologs of the gene 52024 (Ankrd22), run:
@@ -131,15 +144,26 @@ entrez_annotate(52024, orgdb="org.Mm.eg.db")
 
 Orthomapper will then try to load the package and search for the respective
 columns. By default, the query is assumed to be ENTREZID (`keytype`
-parameter), and
-`entrez_annotate` attempts to retrieve the SYMBOL column. If these columns
-are not in the annotation db, or that is not what you want, you need to
-specify the columns using the `keytype` and `column` parameters:
+parameter), and `entrez_annotate` attempts to retrieve the SYMBOL column.
+If these columns are not in the annotation db, or that is not what you
+want, you need to specify the columns using the `keytype` and `column`
+parameters:
 
 
 ```{r eval=FALSE}
 entrez_annotate("myCustomID", 
   keytype="CustomID", column="Description", orgdb="myCustomOrg.db")
+```
+
+In fact, this provides a generic and convenient interface to the different
+genome annotation databases:
+
+```{r}
+## map from ENSEMBL to ENTREZID, SYMBOL and GENENAME
+genes <- c("ENSG00000152766", "ENSG00000154451")
+entrez_annotate(genes, keytype="ENSEMBL", 
+  column=c("ENTREZID", "SYMBOL", "GENENAME"),
+  orgdb="org.Hs.eg.db")
 ```
 
 

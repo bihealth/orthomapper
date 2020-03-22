@@ -41,18 +41,20 @@
 #' @export
 entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", keytype="ENTREZID", orgdb=NULL) {
 
-  if(is.null(taxon)) {
-    if(keytype != "ENTREZID") {
-      stop("Taxon can be guessed only from ENTREZID, either use entrez IDs or provide taxon")
-    }
 
-    taxon <- find_taxon(genes[1])[1,2]
+  ## without orgdb, we need a taxon
+  if(is.null(orgdb)) {
+    if(is.null(taxon)) {
+      if(keytype != "ENTREZID") {
+        stop("Taxon can be guessed only from ENTREZID, either use entrez IDs or provide taxon")
+      }
+
+      taxon <- find_taxon(genes[1])[1,2]
+    }
+    if(is.null(taxon) || is.na(taxon)) stop("Cannot identify taxon!")
+    orgdb <- .getdbi(taxon)
   }
 
-  if(is.null(taxon) || is.na(taxon))
-    stop("Cannot identify taxon!")
-
-  if(is.null(orgdb)) orgdb <- .getdbi(taxon)
   dbi <- .loaddbi(orgdb)
 
   cols <- columns(dbi)

@@ -19,6 +19,12 @@ A data frame with two columns
 \description{
 Map a set of gene IDs to orthologs from another taxon
 }
+\details{
+Instead of numeric taxon IDs, a string
+can be used, in which case orthomapper will attempt to identify the taxon ID automatically.
+This will work reliably for full scientific names or monikers in the internal 
+database of annotations (see the output of [speciesDBITable()]).
+}
 \examples{
 orthomap(c(229898, 52024), 10090, 9606)
 }

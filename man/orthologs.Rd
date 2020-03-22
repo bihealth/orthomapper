@@ -7,18 +7,25 @@
 orthologs(taxon1, taxon2)
 }
 \arguments{
-\item{taxon1}{source taxon ID}
+\item{taxon1}{source taxon ID or a name}
 
-\item{taxon2}{target taxon ID}
+\item{taxon2}{target taxon ID or a name}
 }
 \value{
 A data frame with two columns
 }
 \description{
-All ortholog pairs between two taxons
+All ortholog pairs between two taxons.
+}
+\details{
+Instead of numeric taxon IDs, a string
+can be used, in which case orthomapper will attempt to identify the taxon ID automatically.
+This will work reliably for full scientific names or monikers in the internal 
+database of annotations (see the output of [speciesDBITable()]).
 }
 \examples{
 \dontrun{
 mouserat <- orthologs(10090, 10116)
+mouserat <- orthologs("Mm", "Rn")
 }
 }

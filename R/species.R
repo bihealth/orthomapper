@@ -13,6 +13,48 @@ speciesDBITable <- function() {
 }
 
 
+## search for a single taxon name
+.get_taxon <- function(name, fuzzy=TRUE) {
+
+  if(toupper(name) %in% toupper(dbifiles$moniker)) 
+    return(dbifiles$taxonID[ match(toupper(name), toupper(dbifiles$moniker)) ])
+
+  if(any(sel <- grepl(paste0("^", name, "$"), dbifiles$species, ignore.case=TRUE))) {
+    return(dbifiles$taxonID[ which(sel)[1] ])
+  }
+
+  if(!fuzzy) return(NA)
+
+  search <- species_search(name, columns=c("name", "common_names"))
+
+  if(nrow(search) == 0) return(NA)
+  if(nrow(search) == 1) return(search$TaxID)
+
+  warning(sprintf("Multiple species match %s, returning the first one (%s[%s])",
+    name, search$name[1], search$TaxID[1]))
+
+  return(search$TaxID[1])
+}
+
+
+#' Match taxon based on a string
+#'
+#' Return an NCBI taxon ID based on species name 
+#' or moniker (such as "Hs" for Homo sapiens or "Mm" for mouse).
+#' Note that if multiple species match the strings, only the first one will
+#' be returned.
+#' @return named numeric ID vector of the taxons
+#' @seealso species_search
+#' @param name character vector with species names or monikers
+#' @export
+get_taxon <- function(name) {
+
+  ret <- sapply(name, .get_taxon)
+  names(ret) <- name
+  return(ret)
+}
+
+
 #' List taxon IDs in the orthomapper DB
 #' 
 #' List taxon IDs in the orthomapper DB
