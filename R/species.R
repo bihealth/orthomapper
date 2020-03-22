@@ -17,6 +17,7 @@ speciesDBITable <- function() {
 #' 
 #' List taxon IDs in the orthomapper DB
 #' @return a numeric vector of taxon IDs
+#' @export
 species_all <- function() {
 
   fmt <- "SELECT DISTINCT TaxID1 FROM orthologs"
@@ -25,4 +26,60 @@ species_all <- function() {
   map2 <- DBI::dbGetQuery(con, fmt)
 
   return(sort(unique(unlist(c(map1, map2)))))
+}
+
+
+
+#' Retrieve species info 
+#'
+#' Retrieve species info either for all species in the orthology database
+#' or for the species requested throught the taxonID parameter.
+#' @param taxonID numeric vector of taxonomy IDs. If NULL, retrieve all species. Otherwise, find the
+#'                species selected
+#' @examples
+#' species_info(c(9606, 10090))
+#' @export
+species_info <- function(taxonID=NULL) {
+
+  if(is.null(taxonID)) {
+    query <- "SELECT * FROM species"
+  } else {
+    query <- "SELECT * FROM species WHERE TaxID IN (%s)"
+    query <- sprintf(query, paste(taxonID, collapse=", "))
+  }
+
+  ret <- DBI::dbGetQuery(con, query)
+
+  if(!is.null(taxonID)) {
+    ret <- ret[ match(taxonID, ret$TaxID), ]
+    ret$TaxID <- taxonID
+  }
+  rownames(ret) <- NULL
+
+  return(ret)
+}
+
+
+#' Find all species matching a pattern
+#'
+#' Find all species matching a pattern
+#'
+#' @param pattern regular expression to serch for
+#' @param columns columns from the species table to search through
+#' @param ignore.case if TRUE (default) do a case-insensitive search
+#' @examples
+#' ## find Danio rerio
+#' species_search("danio")
+#' ## find all birds
+#' species_search("aves")
+#' @export
+species_search <- function(pattern, columns=c("name", "common_names", "lineage"), ignore.case=TRUE) {
+
+  sp <- species_info()
+
+  sel <- lapply(columns, function(x) grepl(pattern, sp[,x], ignore.case=ignore.case))
+  sel <- Reduce(`|`, sel)
+
+  sp[sel, ]
+
 }

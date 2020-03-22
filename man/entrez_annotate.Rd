@@ -4,7 +4,13 @@
 \alias{entrez_annotate}
 \title{Return annotation information for given Entrez IDs}
 \usage{
-entrez_annotate(genes, taxon = NULL, column = "SYMBOL", orgdb = NULL)
+entrez_annotate(
+  genes,
+  taxon = NULL,
+  column = "SYMBOL",
+  keytype = "ENTREZID",
+  orgdb = NULL
+)
 }
 \arguments{
 \item{genes}{a numeric vector of Entrez gene IDs}
@@ -14,11 +20,13 @@ attempt to identify the taxon (it is much faster if you specify it)}
 
 \item{column}{a character vector with the columns requested from the annotation database}
 
+\item{keytype}{which key to use to access the DB; default ENTREZID}
+
 \item{orgdb}{name of the annotation package; inferred automatically for
 species present in the output of the `speciesDBITable()` function.}
 }
 \value{
-a data frame with `length(column)+1` columns; first column is the entrez ID
+a data frame with `length(column)+1` columns; first column is the entrez ID (or keytype)
 }
 \description{
 Return annotation information for given Entrez IDs
