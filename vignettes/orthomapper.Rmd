@@ -5,7 +5,7 @@ author: "January Weiner"
 date: 22.3.2020
 output: 
   prettydoc::html_pretty:
-    theme: leonids
+    theme: tactile
     highlight: vignette
     toc: true
 vignette: >
