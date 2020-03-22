@@ -1,7 +1,12 @@
 ---
 title: "![](orthomapper-icon.png) Orthomapper: Mapping Orthologs"
+subtitle: "Orthology database and annotation interface"
+author: "January Weiner"
+date: 22.3.2020
 output: 
-  rmarkdown::html_vignette:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: vignette
     toc: true
 vignette: >
   %\VignetteIndexEntry{Finding orthologous genes}

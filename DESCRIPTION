@@ -16,6 +16,7 @@ Imports:
 Suggests: 
     testthat,
     knitr,
+    prettydoc,
     rmarkdown,
     pander,
     org.Mm.eg.db,
