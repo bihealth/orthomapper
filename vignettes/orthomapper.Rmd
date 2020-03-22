@@ -1,6 +1,8 @@
 ---
 title: "Finding orthologous genes"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Finding orthologous genes}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,25 +15,53 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 library(pander)
+library(orthomapper)
+library(org.Hs.eg.db)
+library(org.Mm.eg.db)
 ```
 
-```{r setup}
-library(orthomapper)
-```
 
 # Basic usage
+
+## Quick start
+
+```{r eval=FALSE}
+library(orthomapper)
+## get all orthologs between mouse and rat
+mouserat <- orthologs(10090, 10116)
+
+## get the SYMBOL for gene 52024, infer taxon automatically
+entrez_annotate(52024)
+
+## get more information on the gene ID 52024
+entrez_annotate(52024, taxon=10090, c("SYMBOL", "GENENAME"))
+
+## get all orthologs of the gene ID 52024
+ankrd22.o <- orthologs_all(52024)
+
+## map a list of genes to orthologs from another taxon
+orthomap(c(229898, 52024), 10090, 9606)
+
+## find a gene symbol by similarity search
+similar_symbol("GBP5", 10090)
+
+## get all the species in the databse
+species_info()
+
+## what is taxon 9606?
+species_info(9606)
+
+## what is the taxon ID of the mouse?
+species_search("mouse")
+```
+
+
+## Orthomapper and taxonomy
 
 To use orthomapper, you need to know the Taxonomy IDs (from
 [NCBI](https://www.ncbi.nlm.nih.gov/taxonomy)) of the species you are
 working on. Some of the more popular Taxonomy IDs are given below in Table
 1.
-
-**Table 1.** Species for which organism annotation is available.
-
-```{r,results="asis",echo=FALSE}
-.dbi <- speciesDBITable()
-pandoc.table(.dbi[ order(.dbi$species), ], justify="left")
-```
 
 To get all orthologous gene pairs from two taxons (termed "source" and
 "target"), you simply can run the following function:
@@ -50,6 +80,29 @@ to that genes:
 ## map Gbp5 and Ankrd22 from mouse to human 
 orthomap(c(229898, 52024), 10090, 9606)
 ```
+
+To get all orthologs of the gene 52024 (Ankrd22), run:
+
+```{r}
+ankrd22.o <- orthologs_all(52024)
+head(ankrd22.o[[1]])
+```
+
+`orthologs_all` returns a list, since you can submit more than one gene at
+once.
+
+
+**Table 1.** Species for which organism annotation is available.
+
+```{r,results="asis",echo=FALSE}
+.dbi <- speciesDBITable()
+pandoc.table(.dbi[ order(.dbi$species), ], justify="left")
+```
+
+
+
+
+## Mapping between Entrez IDs and other types of IDs
 
 As you can see, the orthomapper DB is based on Entrez gene IDs. 
 Fortunately, orthomapper makes translating the Entrez IDs relatively
@@ -71,17 +124,57 @@ If you do not specify the taxon, orthomapper uses the function
 corresponding to the gene ID. It will fail if the first gene of the genes
 argument is not in the database.
 
-To get all orthologs of the gene 52024 (Ankrd22), run:
+You can also provide the name of an annotation package to use with `entrez_annotate`:
 
-```{r}
-ankrd22.o <- orthologs_all(52024)
-head(ankrd22.o[[1]])
+```{r eval=FALSE}
+entrez_annotate(52024, orgdb="org.Mm.eg.db")
 ```
 
-`orthologs_all` returns a list, since you can submit more than one gene at
-once.
+Orthomapper will then try to load the package and search for the respective
+columns. By default, the query is assumed to be ENTREZID (`keytype`
+parameter), and
+`entrez_annotate` attempts to retrieve the SYMBOL column. If these columns
+are not in the annotation db, or that is not what you want, you need to
+specify the columns using the `keytype` and `column` parameters:
+
+
+```{r eval=FALSE}
+entrez_annotate("myCustomID", 
+  keytype="CustomID", column="Description", orgdb="myCustomOrg.db")
+```
+
+
+## Taxon IDs and species names
+
+For the 300+ species in the orthology database species information from
+NCBI is directly provided. For each taxon ID, you can retrieve the
+scientific species name, common names:
+
+```{r}
+## by default, lineage information is not shown
+species_info()[1:4,]
+
+## what is the species 10090?
+species_info(10090)
+
+## get the lineage for 10090
+species_info(10090, show.lineage=TRUE)$lineage
+```
+
+You can also quickly get the taxonomy ID for a species by searching through
+the fields of the species database with a pattern:
+
+```{r}
+## find the mouse
+species_search("mouse")
+
+## find all zebras ;-)
+species_search("zebra")
+```
 
 # Gory details
+
+## Source of the data
 
 The package `orthomapper` is based on a file containing information about
 orthologous genes distributed by NCBI, `gene_orthologs.gz` downloaded from
@@ -97,3 +190,19 @@ this information is not contained directly in the ortholog database.
 Rather, R1 and M1 both link to a human gene H1, so the relationship between
 R1 and M1 must be inferred from the relationships R1-H1-M1. This is the
 point of the `orthomapper` package.
+
+## Database structure
+
+The Orthomapper database resides in `extdata/orthologDB.sqlite`. You can
+find this file in the R installation with
+
+```{r}
+system.file("extdata", "orthologDB.sqlite", package="orthomapper")
+```
+
+The database is an SQLite file with currently three tables:
+
+ * orthologs: `TaxID1, GeneID1, TaxID2, GeneID2`
+ * species: `TaxID, name, common_name, lineage`
+ * meta: additional meta information
+

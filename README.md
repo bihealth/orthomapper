@@ -34,6 +34,15 @@ orthomap(c(229898, 52024), 10090, 9606)
 
 ## find a gene symbol by similarity search
 similar_symbol("GBP5", 10090)
+
+## get all the species in the databse
+species_info()
+
+## what is taxon 9606?
+species_info(9606)
+
+## what is the taxon ID of the mouse?
+species_search("mouse")
 ```
 
 For more information, refer to the package vignette:

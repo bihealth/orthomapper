@@ -36,10 +36,11 @@ species_all <- function() {
 #' or for the species requested throught the taxonID parameter.
 #' @param taxonID numeric vector of taxonomy IDs. If NULL, retrieve all species. Otherwise, find the
 #'                species selected
+#' @param show.lineage if TRUE, show also the lineage column (not often needed)
 #' @examples
 #' species_info(c(9606, 10090))
 #' @export
-species_info <- function(taxonID=NULL) {
+species_info <- function(taxonID=NULL, show.lineage=FALSE) {
 
   if(is.null(taxonID)) {
     query <- "SELECT * FROM species"
@@ -56,6 +57,8 @@ species_info <- function(taxonID=NULL) {
   }
   rownames(ret) <- NULL
 
+  if(!show.lineage) ret$lineage <- NULL
+
   return(ret)
 }
 
@@ -67,18 +70,22 @@ species_info <- function(taxonID=NULL) {
 #' @param pattern regular expression to serch for
 #' @param columns columns from the species table to search through
 #' @param ignore.case if TRUE (default) do a case-insensitive search
+#' @param show.lineage if TRUE, show also the lineage column (not often needed)
 #' @examples
 #' ## find Danio rerio
 #' species_search("danio")
 #' ## find all birds
 #' species_search("aves")
 #' @export
-species_search <- function(pattern, columns=c("name", "common_names", "lineage"), ignore.case=TRUE) {
+species_search <- function(pattern, columns=c("name", "common_names", "lineage"), ignore.case=TRUE,
+  show.lineage=FALSE) {
 
-  sp <- species_info()
+  sp <- species_info(show.lineage=TRUE)
 
   sel <- lapply(columns, function(x) grepl(pattern, sp[,x], ignore.case=ignore.case))
   sel <- Reduce(`|`, sel)
+
+  if(!show.lineage) sp$lineage <- NULL
 
   sp[sel, ]
 

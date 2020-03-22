@@ -46,3 +46,12 @@ orthologyDBFromFile <- function(input_file, output_file, fields=c(1,2,4,5), info
   DBI::dbDisconnect(.con)
 }
 
+
+#' Show meta information about the orthology DB
+#'
+#' Show meta information about the orthology DB
+#' @export
+orthodb_showmeta <- function() {
+  query <- "SELECT * FROM meta"
+  DBI::dbGetQuery(con, query)
+}
