@@ -20,7 +20,25 @@ library(org.Hs.eg.db)
 library(org.Mm.eg.db)
 ```
 
-# Basic usage
+# Summary
+
+Orthomapper is an interface to a database of orthologs. It allows quick and
+reliable mapping of orthologs for a limited number of species. Most
+importantly, the database is local, which is not only speeds up the look up
+of the orthologs as compared e.g. to biomaRt, but it also ensures
+reproducibility.
+
+The orthomapper database is based on a
+[file](https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene_orthologs.gz) published
+by NCBI. The file covers many animal genomes, including most published
+vertebrate sequences, but does not contain bacterial, plant or fungal genomes; not even
+*C. elegans*. This limits the functionality.
+
+Notably, orthomapper provides also a convenient way of accessing the
+annotation databases such as `org.Hs.eg.db` for the purpose of mapping one
+type of gene identifiers to another.
+
+# Usage
 
 ## Quick start
 
@@ -114,10 +132,11 @@ pandoc.table(.dbi[ order(.dbi$species), ], justify="left")
 
 
 
-## Mapping between Entrez IDs and other types of IDs
+## Orthomapper as interface for genome annotations
 
 As you can see, the orthomapper DB is based on Entrez gene IDs. 
-Fortunately, orthomapper makes translating the Entrez IDs relatively
+Fortunately, orthomapper makes translating the Entrez IDs (and other types
+of IDs) relatively
 painless. In the table above, you will see that for several species,
 orthomapper is aware which annotation package should be used. If asked to
 do so, it attempts to load the respective package and return the requested
