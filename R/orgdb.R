@@ -1,7 +1,7 @@
 .getdbi <- function(taxon) {
   m <- match(taxon, dbifiles$taxonID)
   if(is.na(m)) {
-    stop(sprintf("Can't find a matching org.db for taxon %d automatically", taxon))
+    stop(sprintf("Can't find a matching org.db for taxon %s automatically", taxon))
   }
 
   orgdb <- dbifiles$DB[m]
@@ -21,6 +21,11 @@
 #' Return annotation information for given Entrez IDs
 #'
 #' Return annotation information for given Entrez IDs
+#'
+#' Instead of numeric taxon IDs, a string
+#' can be used, in which case orthomapper will attempt to identify the taxon ID automatically.
+#' This will work reliably for full scientific names or monikers in the internal 
+#' database of annotations (see the output of [speciesDBITable()]).
 #' @param genes a numeric vector of Entrez gene IDs
 #' @param taxon a single value for a taxon. If NULL, orthomapper will
 #'              attempt to identify the taxon (it is much faster if you specify it)
@@ -52,6 +57,9 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", keytype="ENTREZI
       taxon <- find_taxon(genes[1])[1,2]
     }
     if(is.null(taxon) || is.na(taxon)) stop("Cannot identify taxon!")
+
+    # try to translate "hs" or "homo sapiens" into numeric taxon
+    if(!is.numeric(taxon)) taxon <- .get_taxon(taxon, fuzzy=FALSE)
     orgdb <- .getdbi(taxon)
   }
 
