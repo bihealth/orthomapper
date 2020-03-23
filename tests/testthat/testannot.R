@@ -12,3 +12,11 @@ test_that("Orthomapper returns annotations", {
     expect_true(all(c("ENTREZID", "SYMBOL", "GENENAME") %in% colnames(a)))
 
 })
+
+test_that("entrez_annotate handles NAs in input", {
+
+    a <- entrez_annotate(c(52024, NA), taxon=10090, "SYMBOL")
+    expect_true(is.data.frame(a))
+    expect_identical(nrow(a), 2)
+
+})

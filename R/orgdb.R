@@ -66,7 +66,13 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", keytype="ENTREZI
 
   genes2 <- as.character(genes)
   ret <- lapply(column, function(cc) {
-    mapIds(dbi, genes2, column=cc, keytype=keytype, multiVals="first")
+    rr <- mapIds(dbi, genes2, column=cc, keytype=keytype, multiVals="first")
+    if(is.list(rr)) { # when there are NA's
+      names(rr) <- NULL
+      rr <- lapply(rr, function(x) if(is.null(x)) NA else x)
+      rr <- unlist(rr)
+    }
+    return(rr)
   })
   ret <- Reduce(cbind, ret)
 
