@@ -83,7 +83,7 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", keytype="ENTREZI
 
   ret <- data.frame(genes, ret, stringsAsFactors=FALSE)
   rownames(ret) <- NULL
-  colnames(ret) <- c("Entrez", column)
+  colnames(ret) <- c(keytype, column)
 
   return(ret)
 }
