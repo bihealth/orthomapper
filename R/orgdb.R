@@ -65,18 +65,16 @@ entrez_annotate <- function(genes, taxon=NULL, column="SYMBOL", keytype="ENTREZI
   }
 
   genes2 <- as.character(genes)
+  genes2[is.na(genes2)] <- -9999 # otherwise mapIds returns a list
   ret <- lapply(column, function(cc) {
     rr <- mapIds(dbi, genes2, column=cc, keytype=keytype, multiVals="first")
-    if(is.list(rr)) { # when there are NA's
-      names(rr) <- NULL
-      rr <- lapply(rr, function(x) if(is.null(x)) NA else x)
-      rr <- unlist(rr)
-    }
+    if(is.list(rr)) stop("entrez_annotate: mapIds returned a list, cannot proceed")
     return(rr)
   })
   ret <- Reduce(cbind, ret)
 
   ret <- data.frame(genes, ret, stringsAsFactors=FALSE)
+  rownames(ret) <- NULL
   colnames(ret) <- c("Entrez", column)
 
   return(ret)
